@@ -4,21 +4,22 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 const nodemailer = require('nodemailer');
 
+const app = express();
 
-const app = express()
 // View engine setup
-app.engine('handlebars',exphbs());
-app.set('view engine',"handlebars");
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 
-//static
-app.use('/public',express.static(path.join(__dirname,'public')));
+// Static folder
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
-app.use(bodyParser.urlencoded({extended:false}))
-app.use(bodyParser.json())
+// Body Parser Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get('/',(req,res)=>{
-    res.send('Hello');
-})
+app.get('/', (req, res) => {
+  res.render('contact', { layout: false });
+});
 app.listen(3000,()=>{
-    console.log('Server is started');
+    console.log('Server is started...');
 })
