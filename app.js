@@ -7,11 +7,16 @@ const nodemailer = require('nodemailer');
 const app = express();
 
 // View engine setup
-app.engine('handlebars', exphbs());
+
+app.engine('handlebars', exphbs({
+  extname: "handlebars",
+  //defaultLayout: "main-layout",
+  layoutsDir: "views/"
+}));
 app.set('view engine', 'handlebars');
 
 // Static folder
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.resolve(__dirname, 'public')));
 
 // Body Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,24 +29,24 @@ app.get('/', (req, res) => {
 app.post('/send',(req,res)=>{
  const output =`
  <p>You have new contact request </p>
- <h3> Contact Details</h3>
- <ul>
+ <h3> Contact Details </h3>
+ <ol>
   <li>Name: ${req.body.name}</li>
   <li>Phone Number: ${req.body.phone}</li>
- </ul>
+ </ol>
  <h3>Message</h3>
  <p>${req.body.message}</p>
  `;
 
  // create reusable transporter object using the default SMTP transport
  let transporter = nodemailer.createTransport({
-  host: 'smtp.mailtrap.io',
-  port: 2525,
-  //secure: false, // true for 465, false for other ports
-  auth: {
-      user: 'f21f60fc42612e', // generated ethereal user
-      pass: '24529b79354f0e'  // generated ethereal password
-  },
+    host: "smtp.mailgun.org",
+    port: 25,
+    auth: {
+      user: "testing@scizers.com",
+      pass: "ad70f1ff56f494a695596afea65f8922-a83a87a9-60e52bf1"
+    },
+
   tls:{
     rejectUnauthorized:false
   }
@@ -49,10 +54,10 @@ app.post('/send',(req,res)=>{
 
 // setup email data with unicode symbols
 let mailOptions = {
-    from: '"Nodemailer Contact" <f21f60fc42612e>', // sender address
+    from: 'testing@scizers.com', // sender address
     to: 'amans7990@gmail.com', // list of receivers
-    subject: 'Node Contact Request', // Subject line
-    text: 'Hello world?', // plain text body
+    subject: 'Send Query', // Subject line
+    text: 'Hello world!!', // plain text body
     html: output // html body
 };
 
@@ -61,10 +66,9 @@ transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
         return console.log(error);
     }
-    console.log('Message sent: %s', info.messageId);   
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
-    res.render('contact', {msg:'Email has been sent'});
+    else{
+        console.log('email sent' + info.response);
+    }
 });
 
 })
