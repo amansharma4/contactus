@@ -26,8 +26,8 @@ app.get('/', (req, res) => {
   res.render('contact', { layout: false });
 });
 
-app.post('/send',(req,res)=>{
- const output =`
+app.post('/send', (req, res) => {
+  const output = `
  <p>You have new contact request </p>
  <h3> Contact Details </h3>
  <ol>
@@ -38,40 +38,40 @@ app.post('/send',(req,res)=>{
  <p>${req.body.message}</p>
  `;
 
- // create reusable transporter object using the default SMTP transport
- let transporter = nodemailer.createTransport({
-    host: "smtp.mailgun.org",
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.@gmail.com",
     port: 25,
     auth: {
-      user: "testing@scizers.com",
-      pass: "ad70f1ff56f494a695596afea65f8922-a83a87a9-60e52bf1"
+      user: "your-email",
+      pass: "your-password"
     },
 
-  tls:{
-    rejectUnauthorized:false
-  }
-});
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
 
-// setup email data with unicode symbols
-let mailOptions = {
-    from: 'testing@scizers.com', // sender address
-    to: 'amans7990@gmail.com', // list of receivers
+  // setup email data with unicode symbols
+  let mailOptions = {
+    from: 'email', // sender address
+    to: 'email', // list of receivers
     subject: 'Send Query', // Subject line
     text: 'Hello world!!', // plain text body
     html: output // html body
-};
+  };
 
-// send mail with defined transport object
-transporter.sendMail(mailOptions, (error, info) => {
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-        return console.log(error);
+      return console.log(error);
     }
-    else{
-        console.log('email sent' + info.response);
+    else {
+      console.log('email sent' + info.response);
     }
-});
+  });
 
 })
-app.listen(3000,()=>{
-    console.log('Server is started...');
+app.listen(3000, () => {
+  console.log('Server is started...');
 })
